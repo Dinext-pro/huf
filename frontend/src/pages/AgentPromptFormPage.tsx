@@ -69,7 +69,7 @@ const agentPromptFormSchema = z.object({
 
 type AgentPromptFormValues = z.infer<typeof agentPromptFormSchema>;
 
-const advancedFieldNames = ['slug', 'description', 'is_active', 'visibility', 'tags'] as const;
+const advancedFieldNames = ['slug', 'is_active', 'visibility', 'tags'] as const;
 
 function mapDocToFormValues(doc: AgentPromptDoc): AgentPromptFormValues {
   return {
@@ -120,9 +120,8 @@ export function AgentPromptFormPage() {
   });
 
   const watchedTitle = form.watch('title');
-  const [watchedSlug, watchedDescription, watchedIsActive, watchedVisibility, watchedTags] = form.watch([
+  const [watchedSlug, watchedIsActive, watchedVisibility, watchedTags] = form.watch([
     'slug',
-    'description',
     'is_active',
     'visibility',
     'tags',
@@ -141,7 +140,6 @@ export function AgentPromptFormPage() {
     const hasCustomSlug = Boolean(watchedSlug && watchedSlug !== generatedSlug);
     const hasNonDefaultAdvancedValue =
       hasCustomSlug ||
-      Boolean(watchedDescription) ||
       !watchedIsActive ||
       watchedVisibility !== 'Private' ||
       Boolean(watchedTags) ||
@@ -153,7 +151,6 @@ export function AgentPromptFormPage() {
   }, [
     watchedTitle,
     watchedSlug,
-    watchedDescription,
     watchedIsActive,
     watchedVisibility,
     watchedTags,
@@ -615,6 +612,18 @@ export function AgentPromptFormPage() {
                     </FormItem>
                   )}
                 />
+                <div className="space-y-2 sm:col-span-2">
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea
+                    id="description"
+                    value={form.watch('description') || ''}
+                    onChange={(event) =>
+                      form.setValue('description', event.target.value, { shouldDirty: true })
+                    }
+                    placeholder="Describe what this prompt is for"
+                    rows={3}
+                  />
+                </div>
               </CardContent>
             </Card>
 
@@ -710,18 +719,6 @@ export function AgentPromptFormPage() {
                       <p className="text-xs text-steel-soft">
                         Controls who can see and use this prompt template.
                       </p>
-                    </div>
-                    <div className="space-y-2 sm:col-span-2">
-                      <Label htmlFor="description">Description</Label>
-                      <Textarea
-                        id="description"
-                        value={form.watch('description') || ''}
-                        onChange={(event) =>
-                          form.setValue('description', event.target.value, { shouldDirty: true })
-                        }
-                        placeholder="Describe what this prompt is for"
-                        rows={3}
-                      />
                     </div>
                     <div className="space-y-2 sm:col-span-2">
                       <Label htmlFor="tags">Tags</Label>
