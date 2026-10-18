@@ -1,0 +1,7 @@
+{
+  "app": "huf",
+  "package_dir": "huf",
+  "mode": "repository",
+  "gitflow": false,
+  "frontend_tests": false
+}
